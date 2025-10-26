@@ -1,0 +1,330 @@
+/* 卡片组件 */
+.card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    margin-bottom: 20px;
+}
+
+.card h3 {
+    color: var(--primary-color);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--light-color);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 侧边栏 */
+.sidebar-left,
+.sidebar-right {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* 可视化区域 */
+.visualization-area {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    min-height: 600px;
+}
+
+/* 组件列表 */
+.component-list {
+    list-style-type: none;
+}
+
+.component-list li {
+    padding: 10px;
+    margin-bottom: 8px;
+    background: var(--light-color);
+    border-radius: 5px;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.component-list li:hover {
+    background: var(--secondary-color);
+    color: white;
+    transform: translateX(5px);
+}
+
+/* 代码块 */
+.code-block {
+    background: #2d2d2d;
+    color: #f8f8f2;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: 'Courier New', monospace;
+    overflow-x: auto;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+/* 标签页 */
+.tab-container {
+    margin-top: 20px;
+}
+
+.tabs {
+    display: flex;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.tab {
+    padding: 10px 20px;
+    cursor: pointer;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: var(--transition);
+}
+
+.tab.active {
+    border-bottom: 3px solid var(--secondary-color);
+    color: var(--secondary-color);
+    font-weight: bold;
+}
+
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* 算法网格 */
+.algorithm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.algorithm-item {
+    background: var(--light-color);
+    padding: 10px;
+    border-radius: 5px;
+    text-align: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.algorithm-item:hover {
+    background: var(--secondary-color);
+    color: white;
+}
+
+/* 调试按钮 */
+.debug-controls {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+
+.debug-btn {
+    padding: 8px 15px;
+    background: var(--secondary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.debug-btn:hover {
+    background: #2980b9;
+}
+
+.debug-btn:disabled {
+    background: #bdc3c7;
+    cursor: not-allowed;
+}
+
+/* 进度条 */
+.progress-container {
+    margin-top: 15px;
+}
+
+.progress-bar {
+    height: 10px;
+    background: #ecf0f1;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: var(--success-color);
+    border-radius: 5px;
+    transition: width 0.3s ease;
+}
+
+.progress-text {
+    font-size: 0.9rem;
+    color: #7f8c8d;
+}
+
+/* 表单样式 */
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="email"] {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: var(--transition);
+}
+
+select:focus, textarea:focus, input[type="text"]:focus,
+input[type="password"]:focus, input[type="email"]:focus {
+    outline: none;
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+}
+
+/* 模态窗口 */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: modalFadeIn 0.3s ease;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.modal-content {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from { transform: translateY(-50px); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.close-modal {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #7f8c8d;
+    transition: var(--transition);
+}
+
+.close-modal:hover {
+    color: var(--dark-color);
+}
+
+/* 内存可视化 */
+.memory-visualization {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.memory-block {
+    width: 80px;
+    height: 40px;
+    background: var(--light-color);
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 0.8rem;
+    transition: var(--transition);
+}
+
+.memory-block.allocated {
+    background: var(--success-color);
+    color: white;
+}
+
+.memory-block.freed {
+    background: var(--accent-color);
+    color: white;
+}
+
+.memory-address {
+    font-size: 0.7rem;
+    color: #7f8c8d;
+}
+
+/* 3D可视化容器 */
+.three-d-container {
+    width: 100%;
+    height: 300px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 15px;
+    position: relative;
+}
+
+.three-d-container canvas {
+    border-radius: 8px;
+}
+
+/* 图表容器 */
+.radar-container {
+    width: 100%;
+    height: 300px;
+    margin-top: 15px;
+}
+
+.chart-container {
+    position: relative;
+    height: 200px;
+    width: 100%;
+}

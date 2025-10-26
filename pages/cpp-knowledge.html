@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C++ 知识点 - ACES 系统</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <style>
+        .chapter-tree {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .chapter-item {
+            margin: 10px 0;
+            padding: 15px;
+            border-left: 4px solid #3498db;
+            background: #f8f9fa;
+            border-radius: 0 8px 8px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .chapter-item:hover {
+            background: #e3f2fd;
+            transform: translateX(5px);
+        }
+
+        .chapter-item.active {
+            background: #3498db;
+            color: white;
+        }
+
+        .content-area {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+
+        .code-example {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .example-tabs {
+            display: flex;
+            border-bottom: 1px solid #444;
+            margin-bottom: 15px;
+        }
+
+        .example-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+        }
+
+        .example-tab.active {
+            border-bottom-color: #3498db;
+            color: #3498db;
+        }
+
+        .quiz-section {
+            background: #e8f4fd;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .quiz-question {
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding: 0;
+        }
+
+        .quiz-option {
+            padding: 10px;
+            margin: 5px 0;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .quiz-option:hover {
+            background: #d4edda;
+        }
+
+        .progress-tracker {
+            display: flex;
+            justify-content: space-between;
+            margin: 20px 0;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .progress-item {
+            text-align: center;
+            flex: 1;
+        }
+
+        .progress-circle {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            transition: all 0.3s;
+        }
+
+        .progress-item.completed .progress-circle {
+            background: #28a745;
+            color: white;
+        }
+
+        .progress-item.current .progress-circle {
+            background: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1><i class="fas fa-code"></i> C++ 编程知识体系</h1>
+            <p class="subtitle">从基础到高级的完整 C++ 学习路径</p>
+        </div>
+
+        <div class="main-content" style="display: grid; grid-template-columns: 300px 1fr; gap: 20px;">
+            <!-- 左侧导航 -->
+            <div class="sidebar-left">
+                <div class="chapter-tree">
+                    <h3><i class="fas fa-book"></i> 章节列表</h3>
+                    <div id="chapters-list">
+                        <!-- 章节将通过 JavaScript 动态生成 -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-chart-line"></i> 学习进度</h3>
+                    <div class="progress-tracker" id="progress-tracker">
+                        <!-- 进度跟踪器将通过 JavaScript 动态生成 -->
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><i class="fas fa-search"></i> 快速搜索</h3>
+                    <input type="text" id="search-cpp" placeholder="搜索知识点..." style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                </div>
+            </div>
+
+            <!-- 右侧内容 -->
+            <div class="content-area">
+                <div id="content-placeholder">
+                    <div style="text-align: center; padding: 100px 20px;">
+                        <i class="fas fa-book-open fa-3x" style="color: #3498db; margin-bottom: 20px;"></i>
+                        <h2>选择左侧章节开始学习</h2>
+                        <p>点击章节标题查看详细内容和代码示例</p>
+                    </div>
+                </div>
+
+                <div id="chapter-content" style="display: none;">
+                    <div class="chapter-header">
+                        <h2 id="chapter-title">章节标题</h2>
+                        <div class="chapter-meta">
+                            <span id="chapter-difficulty" class="difficulty-badge">初级</span>
+                            <span id="chapter-duration">预计学习时间: 30分钟</span>
+                        </div>
+                    </div>
+
+                    <div class="chapter-body">
+                        <div id="chapter-description">
+                            <!-- 章节描述内容 -->
+                        </div>
+
+                        <div class="example-section">
+                            <h3><i class="fas fa-code"></i> 代码示例</h3>
+                            <div class="example-tabs" id="example-tabs">
+                                <!-- 示例标签页 -->
+                            </div>
+                            <div class="code-example" id="code-example">
+                                <!-- 代码示例 -->
+                            </div>
+                        </div>
+
+                        <div class="quiz-section" id="quiz-section">
+                            <h3><i class="fas fa-question-circle"></i> 知识检测</h3>
+                            <div class="quiz-question" id="quiz-question">
+                                <!-- 问题内容 -->
+                            </div>
+                            <ul class="quiz-options" id="quiz-options">
+                                <!-- 选项列表 -->
+                            </ul>
+                            <button id="check-answer" class="debug-btn" style="margin-top: 15px;">检查答案</button>
+                        </div>
+
+                        <div class="navigation-buttons" style="display: flex; justify-content: space-between; margin-top: 30px;">
+                            <button id="prev-chapter" class="debug-btn">
+                                <i class="fas fa-arrow-left"></i> 上一章
+                            </button>
+                            <button id="mark-complete" class="debug-btn" style="background: #28a745;">
+                                <i class="fas fa-check"></i> 标记完成
+                            </button>
+                            <button id="next-chapter" class="debug-btn">
+                                下一章 <i class="fas fa-arrow-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/js/all.min.js"></script>
+    <script>
+        // C++ 知识点数据
+        const cppKnowledgeData = {
+            chapters: {
+                "第1章 预备知识": {
+                    difficulty: "初级",
+                    duration: "20分钟",
+                    description: "本章介绍C++的基本概念和发展历史，为后续学习打下基础。",
+                    sections: [
+                        {
+                            title: "1.1 C++ 简介",
+                            content: "C++是一种通用的编程语言，支持过程化编程、面向对象编程和泛型编程。",
+                            examples: {
+                                "基础示例": `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, C++ World!" << endl;
+    return 0;
+}`,
+                                "历史背景": `// C++ 由 Bjarne Stroustrup 于1979年在贝尔实验室开始开发
+// 最初称为 "C with Classes"，1983年更名为 C++
+// 现在已成为最流行的编程语言之一`
+                            },
+                            quiz: {
+                                question: "C++ 最初被称为什么？",
+                                options: ["C with Objects", "C with Classes", "C Plus", "Enhanced C"],
+                                answer: 1
+                            }
+                        },
+                        {
+                            title: "1.2 C++ 发展历史",
+                            content: "了解C++的发展历程和重要版本更新。",
+                            examples: {
+                                "版本历史": `主要版本:
+- 1985: C++ 1.0
+- 1998: C++98 (第一个国际标准)
+- 2003: C++03
+- 2011: C++11 (重大更新)
+- 2014: C++14
+- 2017: C++17
+- 2020: C++20`
+                            },
+                            quiz: {
+                                question: "C++的第一个国际标准是哪一年发布的？",
+                                options: ["1985", "1998", "2003", "2011"],
+                                answer: 1
+                            }
+                        }
+                    ]
+                },
+                "第2章 开始学习 C++": {
+                    difficulty: "初级",
+                    duration: "30分钟",
+                    description: "学习C++的基本语法和程序结构。",
+                    sections: [
+                        {
+                            title: "2.1 进入 C++ 世界",
+                            content: "学习第一个C++程序的基本结构。",
+                            examples: {
+                                "Hello World": `#include <iostream>
+using namespace std;
+
+int main() {
+    cout << "Hello, World!" << endl;
+    return 0;
+}`,
+                                "注释使用": `// 这是单行注释
+
+/*
+   这是多行注释
+   可以跨越多行
+*/`
+                            },
+                            quiz: {
+                                question: "在C++中，用于输出的关键字是什么？",
+                                options: ["print", "cout", "printf", "output"],
+                                answer: 1
+                            }
+                        }
+                    ]
+                }
+                // 更多章节数据...
+            },
+            userProgress: {
+                "第1章 预备知识": { completed: true, score: 85 },
+                "第2章 开始学习 C++": { completed: false, score: 0 }
+            }
+        };
+
+        class CppKnowledgeManager {
+            constructor() {
+                this.currentChapter = null;
+                this.currentSection = 0;
+                this.userProgress = cppKnowledgeData.userProgress;
+                this.init();
+            }
+
+            init() {
+                this.renderChaptersList();
+                this.setupEventListeners();
+                this.loadUserProgress();
+            }
+
+            renderChaptersList() {
+                const chaptersList = document.getElementById('chapters-list');
+                const progressTracker = document.getElementById('progress-tracker');
+
+                let chaptersHTML = '';
+                let progressHTML = '';
+                let chapterIndex = 0;
+
+                Object.keys(cppKnowledgeData.chapters).forEach(chapterTitle => {
+                    const chapter = cppKnowledgeData.chapters[chapterTitle];
+                    const progress = this.userProgress[chapterTitle];
+                    const isCompleted = progress && progress.completed;
+                    const isCurrent = !this.currentChapter && chapterIndex === 0;
+
+                    chaptersHTML += `
+                        <div class="chapter-item ${isCurrent ? 'active' : ''}"
+                             data-chapter="${chapterTitle}">
+                            <div style="font-weight: bold;">${chapterTitle}</div>
+                            <div style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                                <span class="difficulty-badge">${chapter.difficulty}</span>
+                                ${isCompleted ? '<i class="fas fa-check" style="color: #28a745; margin-left: 10px;"></i>' : ''}
+                            </div>
+                        </div>
+                    `;
+
+                    progressHTML += `
+                        <div class="progress-item ${isCompleted ? 'completed' : ''} ${isCurrent ? 'current' : ''}">
+                            <div class="progress-circle">
+                                ${isCompleted ? '<i class="fas fa-check"></i>' : chapterIndex + 1}
+                            </div>
+                            <div style="font-size: 0.8em;">第${chapterIndex + 1}章</div>
+                        </div>
+                    `;
+
+                    chapterIndex++;
+                });
+
+                chaptersList.innerHTML = chaptersHTML;
+                progressTracker.innerHTML = progressHTML;
+            }
+
+            setupEventListeners() {
+                // 章节点击事件
+                document.addEventListener('click', (e) => {
+                    if (e.target.closest('.chapter-item')) {
+                        const chapterItem = e.target.closest('.chapter-item');
+                        const chapterTitle = chapterItem.dataset.chapter;
+                        this.loadChapter(chapterTitle);
+                    }
+                });
+
+                // 导航按钮
+                document.getElementById('prev-chapter')?.addEventListener('click', () => this.prevChapter());
+                document.getElementById('next-chapter')?.addEventListener('click', () => this.nextChapter());
+                document.getElementById('mark-complete')?.addEventListener('click', () => this.markComplete());
+
+                // 搜索功能
+                document.getElementById('search-cpp')?.addEventListener('input', (e) => {
+                    this.searchContent(e.target.value);
+                });
+
+                // 检查答案
+                document.getElementById('check-answer')?.addEventListener('click', () => {
+                    this.checkAnswer();
+                });
+            }
+
+            loadChapter(chapterTitle) {
+                this.currentChapter = chapterTitle;
+                this.currentSection = 0;
+
+                const chapter = cppKnowledgeData.chapters[chapterTitle];
+                if (!chapter) return;
+
+                // 更新活动状态
+                document.querySelectorAll('.chapter-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                document.querySelector(`.chapter-item[data-chapter="${chapterTitle}"]`).classList.add('active');
+
+                // 显示内容区域
+                document.getElementById('content-placeholder').style.display = 'none';
+                document.getElementById('chapter-content').style.display = 'block';
+
+                // 更新章节标题和元数据
+                document.getElementById('chapter-title').textContent = chapterTitle;
+                document.getElementById('chapter-difficulty').textContent = chapter.difficulty;
+                document.getElementById('chapter-duration').textContent = `预计学习时间: ${chapter.duration}`;
+
+                // 加载第一个章节内容
+                this.loadSection(0);
+            }
+
+            loadSection(sectionIndex) {
+                const chapter = cppKnowledgeData.chapters[this.currentChapter];
+                if (!chapter || !chapter.sections[sectionIndex]) return;
+
+                this.currentSection = sectionIndex;
+                const section = chapter.sections[sectionIndex];
+
+                // 更新描述内容
+                document.getElementById('chapter-description').innerHTML = `
+                    <h3>${section.title}</h3>
+                    <p>${section.content}</p>
+                `;
+
+                // 更新代码示例
+                this.renderExamples(section.examples);
+
+                // 更新测验
+                this.renderQuiz(section.quiz);
+            }
+
+            renderExamples(examples) {
+                const exampleTabs = document.getElementById('example-tabs');
+                const codeExample = document.getElementById('code-example');
+
+                let tabsHTML = '';
+                let firstExample = true;
+
+                Object.keys(examples).forEach((exampleName, index) => {
+                    tabsHTML += `
+                        <div class="example-tab ${firstExample ? 'active' : ''}"
+                             data-example="${index}">
+                            ${exampleName}
+                        </div>
+                    `;
+                    firstExample = false;
+                });
+
+                exampleTabs.innerHTML = tabsHTML;
+                codeExample.textContent = examples[Object.keys(examples)[0]];
+
+                // 标签页点击事件
+                exampleTabs.querySelectorAll('.example-tab').forEach(tab => {
+                    tab.addEventListener('click', () => {
+                        exampleTabs.querySelectorAll('.example-tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+
+                        const exampleIndex = parseInt(tab.dataset.example);
+                        const exampleKey = Object.keys(examples)[exampleIndex];
+                        codeExample.textContent = examples[exampleKey];
+                    });
+                });
+            }
+
+            renderQuiz(quiz) {
+                if (!quiz) {
+                    document.getElementById('quiz-section').style.display = 'none';
+                    return;
+                }
+
+                document.getElementById('quiz-section').style.display = 'block';
+                document.getElementById('quiz-question').textContent = quiz.question;
+
+                const optionsHTML = quiz.options.map((option, index) => `
+                    <li class="quiz-option" data-option="${index}">
+                        ${String.fromCharCode(65 + index)}. ${option}
+                    </li>
+                `).join('');
+
+                document.getElementById('quiz-options').innerHTML = optionsHTML;
+
+                // 选项点击事件
+                document.getElementById('quiz-options').querySelectorAll('.quiz-option').forEach(option => {
+                    option.addEventListener('click', () => {
+                        document.querySelectorAll('.quiz-option').forEach(opt => {
+                            opt.style.background = 'white';
+                        });
+                        option.style.background = '#d4edda';
+                    });
+                });
+            }
+
+            checkAnswer() {
+                const selectedOption = document.querySelector('.quiz-option[style*="background: rgb(212, 237, 218)"]');
+                if (!selectedOption) {
+                    alert('请选择一个答案！');
+                    return;
+                }
+
+                const selectedIndex = parseInt(selectedOption.dataset.option);
+                const quiz = cppKnowledgeData.chapters[this.currentChapter].sections[this.currentSection].quiz;
+
+                if (selectedIndex === quiz.answer) {
+                    alert('✅ 回答正确！');
+                } else {
+                    alert('❌ 回答错误，请再试一次！');
+                }
+            }
+
+            prevChapter() {
+                // 实现上一章逻辑
+                console.log('上一章');
+            }
+
+            nextChapter() {
+                // 实现下一章逻辑
+                console.log('下一章');
+            }
+
+            markComplete() {
+                if (!this.currentChapter) return;
+
+                this.userProgress[this.currentChapter] = {
+                    completed: true,
+                    score: 100
+                };
+
+                this.saveUserProgress();
+                this.renderChaptersList();
+
+                alert('🎉 章节标记完成！');
+            }
+
+            searchContent(query) {
+                if (!query.trim()) {
+                    this.renderChaptersList();
+                    return;
+                }
+
+                const filteredChapters = Object.keys(cppKnowledgeData.chapters).filter(chapterTitle => {
+                    const chapter = cppKnowledgeData.chapters[chapterTitle];
+                    return chapterTitle.toLowerCase().includes(query.toLowerCase()) ||
+                           chapter.description.toLowerCase().includes(query.toLowerCase());
+                });
+
+                const chaptersList = document.getElementById('chapters-list');
+                let chaptersHTML = '';
+
+                filteredChapters.forEach(chapterTitle => {
+                    const chapter = cppKnowledgeData.chapters[chapterTitle];
+                    const progress = this.userProgress[chapterTitle];
+                    const isCompleted = progress && progress.completed;
+
+                    chaptersHTML += `
+                        <div class="chapter-item" data-chapter="${chapterTitle}">
+                            <div style="font-weight: bold;">${chapterTitle}</div>
+                            <div style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                                <span class="difficulty-badge">${chapter.difficulty}</span>
+                                ${isCompleted ? '<i class="fas fa-check" style="color: #28a745; margin-left: 10px;"></i>' : ''}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                chaptersList.innerHTML = chaptersHTML || '<div style="padding: 20px; text-align: center; color: #666;">未找到相关章节</div>';
+            }
+
+            loadUserProgress() {
+                const saved = localStorage.getItem('aces_cpp_progress');
+                if (saved) {
+                    this.userProgress = { ...this.userProgress, ...JSON.parse(saved) };
+                }
+            }
+
+            saveUserProgress() {
+                localStorage.setItem('aces_cpp_progress', JSON.stringify(this.userProgress));
+            }
+        }
+
+        // 初始化管理器
+        document.addEventListener('DOMContentLoaded', () => {
+            new CppKnowledgeManager();
+        });
+    </script>
+</body>
+</html>
