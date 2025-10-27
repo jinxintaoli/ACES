@@ -121,55 +121,166 @@
     </div>
 </div>
 
-<script type="module">
-    // 仪表板特定的初始化代码
-    import { FlowchartManager } from '../js/modules/flowchart.js';
+<!-- 修改 dashboard.html 中的脚本部分 -->
+<script>
+// 仪表板特定的初始化代码
+document.addEventListener('DOMContentLoaded', async () => {
+    console.log('Dashboard 初始化');
 
-    document.addEventListener('DOMContentLoaded', async () => {
-        // 初始化流程图
-        const flowchart = new FlowchartManager();
-        await flowchart.init();
+    // 设置事件监听器
+    setupDashboardEvents();
 
-        // 设置事件监听器
-        setupDashboardEvents();
+    // 初始化标签页
+    switchTab('guide');
+});
+
+function setupDashboardEvents() {
+    // 导航链接
+    document.querySelectorAll('.component-list li').forEach(item => {
+        item.addEventListener('click', () => {
+            const url = item.getAttribute('data-url');
+            console.log('导航到:', url);
+            if (url && window.ACES_APP && window.ACES_APP.router) {
+                window.ACES_APP.router.navigate(url);
+            } else {
+                // 后备导航
+                window.location.hash = url;
+                alert('功能开发中: ' + url);
+            }
+        });
     });
 
-    function setupDashboardEvents() {
-        // 导航链接
-        document.querySelectorAll('.component-list li').forEach(item => {
-            item.addEventListener('click', () => {
-                const url = item.getAttribute('data-url');
-                if (url && window.ACES_APP) {
-                    window.ACES_APP.router.navigate(url);
+    // 章节点击事件
+    document.querySelectorAll('.chapter-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const chapter = item.getAttribute('data-chapter');
+            showChapterContent(chapter);
+        });
+    });
+
+    // 算法点击事件
+    document.querySelectorAll('.algorithm-item').forEach(item => {
+        item.addEventListener('click', () => {
+            const algo = item.getAttribute('data-algo');
+            showAlgorithmDetails(algo);
+        });
+    });
+
+    // 标签页切换
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.getAttribute('data-tab');
+            switchTab(tabId);
+        });
+    });
+
+    // AI 解题按钮
+    const solveBtn = document.getElementById('solve-problem');
+    if (solveBtn) {
+        solveBtn.addEventListener('click', solveWithAI);
+    }
+}
+
+function switchTab(tabId) {
+    // 隐藏所有标签内容
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+
+    // 移除所有标签激活状态
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    // 显示选中的标签内容
+    const targetContent = document.getElementById(`${tabId}-content`);
+    const targetTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+
+    if (targetContent) targetContent.classList.add('active');
+    if (targetTab) targetTab.classList.add('active');
+}
+
+function showChapterContent(chapter) {
+    const contentDiv = document.getElementById('chapter-content');
+    if (contentDiv) {
+        contentDiv.innerHTML = `
+            <h4>第 ${chapter} 章内容</h4>
+            <p>这里是第 ${chapter} 章的详细内容...</p>
+            <div class="code-block">
+                // 示例代码
+                #include &lt;iostream&gt;
+                using namespace std;
+
+                int main() {
+                    cout << "第 ${chapter} 章示例" << endl;
+                    return 0;
                 }
-            });
-        });
-
-        // 标签页切换
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.addEventListener('click', () => {
-                const tabId = tab.getAttribute('data-tab');
-                switchTab(tabId);
-            });
-        });
+            </div>
+        `;
     }
+}
 
-    function switchTab(tabId) {
-        // 隐藏所有标签内容
-        document.querySelectorAll('.tab-content').forEach(content => {
-            content.classList.remove('active');
-        });
+function showAlgorithmDetails(algo) {
+    const infoDiv = document.getElementById('component-info');
+    if (infoDiv) {
+        const algoInfo = {
+            'DFS': '深度优先搜索 - 用于遍历或搜索树或图的算法',
+            'BFS': '广度优先搜索 - 层层扩展的搜索算法',
+            'DP': '动态规划 - 通过把原问题分解为相对简单的子问题的方式求解复杂问题的方法'
+        };
 
-        // 移除所有标签激活状态
-        document.querySelectorAll('.tab').forEach(tab => {
-            tab.classList.remove('active');
-        });
-
-        // 显示选中的标签内容
-        const targetContent = document.getElementById(`${tabId}-content`);
-        const targetTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
-
-        if (targetContent) targetContent.classList.add('active');
-        if (targetTab) targetTab.classList.add('active');
+        infoDiv.innerHTML = `
+            <h4>${algo} 算法</h4>
+            <p>${algoInfo[algo] || '算法详细信息'}</p>
+            <button class="debug-btn" onclick="ACES_APP.router.navigate('/algorithms')">学习更多</button>
+        `;
     }
+}
+
+function solveWithAI() {
+    const problemInput = document.getElementById('problem-input');
+    const solutionDiv = document.getElementById('solution-steps');
+
+    if (problemInput && solutionDiv) {
+        const problem = problemInput.value.trim();
+        if (!problem) {
+            alert('请输入问题描述');
+            return;
+        }
+
+        solutionDiv.innerHTML = `
+            <p>🤖 ACES 正在分析问题...</p>
+            <p>问题: ${problem}</p>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: 70%"></div>
+            </div>
+            <p>解题步骤生成中...</p>
+        `;
+
+        // 模拟 AI 解题过程
+        setTimeout(() => {
+            solutionDiv.innerHTML = `
+                <h5>ACES 解题方案:</h5>
+                <ol>
+                    <li>分析问题类型: 搜索/动态规划</li>
+                    <li>选择合适的数据结构</li>
+                    <li>设计算法流程</li>
+                    <li>复杂度分析: O(n)</li>
+                    <li>编写代码实现</li>
+                </ol>
+                <div class="code-block">
+// ACES 生成的代码
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    // 解决方案代码
+    cout << "问题已解决!" << endl;
+    return 0;
+}
+                </div>
+            `;
+        }, 2000);
+    }
+}
 </script>
