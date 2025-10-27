@@ -25,6 +25,13 @@ function initializeApp() {
                 loadingSpinner.style.display = 'none';
             }
             console.log('ACES 应用加载完成');
+
+            // 手动触发 DOMContentLoaded 事件，确保 dashboard 中的脚本执行
+            setTimeout(() => {
+                if (document.readyState === 'complete') {
+                    window.dispatchEvent(new Event('DOMContentLoaded'));
+                }
+            }, 100);
         })
         .catch(error => {
             console.error('加载失败:', error);
@@ -56,5 +63,4 @@ if (document.readyState === 'loading') {
 // 简单的导航功能
 window.showSection = function(section) {
     alert('导航到: ' + section);
-    // 这里可以添加实际的导航逻辑
 };
