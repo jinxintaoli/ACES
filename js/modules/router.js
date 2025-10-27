@@ -61,6 +61,63 @@ export class Router {
         });
     }
 
+    // 在 Router 类中添加这个方法
+updateContent(html) {
+    const mainContent = document.getElementById('main-content');
+    if (mainContent) {
+        mainContent.innerHTML = html;
+
+        // 隐藏加载状态
+        const loadingElement = document.querySelector('.loading-spinner');
+        if (loadingElement) {
+            loadingElement.style.display = 'none';
+        }
+
+        // 触发页面初始化
+        this.initializePage();
+    }
+}
+
+// 同时添加 initializePage 方法
+initializePage() {
+    // 简单的页面初始化逻辑
+    console.log('页面内容已更新，执行初始化...');
+
+    // 如果是仪表板页面，设置事件监听器
+    if (window.location.hash === '#/' || !window.location.hash) {
+        this.setupDashboardEvents();
+    }
+}
+
+setupDashboardEvents() {
+    // 简化的仪表板事件设置
+    const tabs = document.querySelectorAll('.tab');
+    if (tabs.length > 0) {
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+                this.switchTab(tabId);
+            });
+        });
+    }
+}
+
+switchTab(tabId) {
+    // 简化的标签页切换
+    document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+    });
+    document.querySelectorAll('.tab').forEach(tab => {
+        tab.classList.remove('active');
+    });
+
+    const targetContent = document.getElementById(`${tabId}-content`);
+    const targetTab = document.querySelector(`.tab[data-tab="${tabId}"]`);
+
+    if (targetContent) targetContent.classList.add('active');
+    if (targetTab) targetTab.classList.add('active');
+}
+
     setupEventListeners() {
         // 监听浏览器前进后退
         window.addEventListener('popstate', () => {
