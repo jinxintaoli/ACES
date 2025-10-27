@@ -126,27 +126,69 @@ export class Router {
     }
 
 async loadTemplate(page) {
-    try {
-        // 如果是404页面，直接返回HTML内容，不进行网络请求
-        if (page === '404') {
-            return `
-                <div style="text-align: center; padding: 50px;">
-                    <h2>页面未找到</h2>
-                    <p>抱歉，您访问的页面不存在。</p>
-                    <button onclick="ACES_APP.router.navigate('/')">返回首页</button>
-                </div>
-            `;
-        }
+    // 设置超时时间（5秒）
+    const TIMEOUT = 5000;
 
-        // 其他页面正常加载
-        const response = await fetch(`./pages/${page}.html`);
-        if (!response.ok) throw new Error('模板加载失败');
-        return await response.text();
-    } catch (error) {
-        console.error(`加载模板 ${page} 失败:`, error);
-        // 任何错误都返回404页面
-        return this.loadTemplate('404');
-    }
+    return new Promise(async (resolve, reject) => {
+        const timeoutId = setTimeout(() => {
+            reject(new Error(`加载超时 (${TIMEOUT}ms)`));
+        }, TIMEOUT);
+
+        try {
+            // 如果是404页面，直接返回内容
+            if (page === '404') {
+                clearTimeout(timeoutId);
+                resolve(`
+                    <div style="text-align: center; padding: 50px;">
+                        <h2>页面未找到</h2>
+                        <p>抱歉，您访问的页面不存在。</p>
+                        <button onclick="ACES_APP.router.navigate('/')">返回首页</button>
+                    </div>
+                `);
+                return;
+            }
+
+            const response = await fetch(`./pages/${page}.html`);
+            if (!response.ok) throw new Error('模板加载失败');
+            const html = await response.text();
+
+            clearTimeout(timeoutId);
+            resolve(html);
+        } catch (error) {
+            clearTimeout(timeoutId);
+            console.warn(`页面 ${page} 加载失败，使用备用内容:`, error);
+            // 返回简化的备用内容
+            resolve(this.getFallbackContent(page));
+        }
+    });
+}
+
+getFallbackContent(page) {
+    const fallbacks = {
+        'dashboard': `
+            <div class="dashboard">
+                <h2>ACES 仪表板</h2>
+                <p>快速加载的简化版本</p>
+                <div class="quick-actions">
+                    <button onclick="ACES_APP.router.navigate('/code-editor')">代码编辑器</button>
+                    <button onclick="ACES_APP.router.navigate('/algorithms')">算法学习</button>
+                </div>
+            </div>
+        `,
+        'cpp-knowledge': `
+            <div class="card">
+                <h3>C++ 知识库</h3>
+                <p>基础内容加载中...</p>
+            </div>
+        `,
+        'algorithms': `
+            <div class="card">
+                <h3>算法库</h3>
+                <p>快速访问常用算法</p>
+            </div>
+        `
+    };
+    return fallbacks[page] || this.loadTemplate('404');
 }
 
     async loadModule(moduleName) {

@@ -16,6 +16,17 @@
     <!-- CodeMirror CSS (按需加载) -->
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/codemirror.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.2/theme/monokai.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+        <!-- 关键资源预加载 -->
+    <link rel="preload" href="./css/main.css" as="style">
+    <link rel="preload" href="./css/components.css" as="style">
+    <link rel="preload" href="./js/main.js" as="script">
+
+    <!-- 关键页面预加载 -->
+    <link rel="prefetch" href="./pages/dashboard.html" as="document">
+    <link rel="prefetch" href="./pages/cpp-knowledge.html" as="document">
+
+    <!-- DNS 预连接 -->
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
 </head>
 <body>
     <div id="app">

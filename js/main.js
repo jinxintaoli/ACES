@@ -114,6 +114,84 @@ class ACESApp {
     }
 }
 
+// 添加应用加载状态
+window.APP_LOAD_START = Date.now();
+
+class ACESApp {
+    constructor() {
+        this.init();
+    }
+
+    async init() {
+        try {
+            // 并行初始化关键模块
+            await Promise.all([
+                this.initRouter(),
+                this.initAuth(),
+                this.preloadCriticalResources()
+            ].map(p => p.catch(e => {
+                console.warn('模块初始化警告:', e);
+                return null; // 即使某个模块失败也不阻塞其他模块
+            })));
+
+            console.log(`ACES 应用初始化完成 (${Date.now() - window.APP_LOAD_START}ms)`);
+        } catch (error) {
+            console.error('应用初始化失败:', error);
+            this.showErrorState(error);
+        }
+    }
+
+    async initRouter() {
+        const { Router } = await import('./modules/router.js');
+        this.router = new Router();
+        await this.router.init();
+    }
+
+    async initAuth() {
+        // 延迟加载认证模块
+        const { AuthManager } = await import('./modules/auth.js');
+        this.auth = new AuthManager();
+        // 非关键功能，不阻塞主流程
+        setTimeout(() => this.auth.init(), 1000);
+    }
+
+    async preloadCriticalResources() {
+        // 预加载关键资源
+        const criticalPages = ['dashboard', 'cpp-knowledge', 'algorithms'];
+        criticalPages.forEach(page => {
+            fetch(`./pages/${page}.html`).catch(() => {}); // 静默失败
+        });
+    }
+
+    showErrorState(error) {
+        const content = document.getElementById('main-content');
+        if (content) {
+            content.innerHTML = `
+                <div class="error-state">
+                    <h3>应用加载异常</h3>
+                    <p>${error.message}</p>
+                    <button onclick="location.reload()">重新加载</button>
+                </div>
+            `;
+        }
+    }
+}
+
+// 延迟非关键资源的加载
+function loadNonCriticalResources() {
+    // 延迟加载复杂模块
+    setTimeout(() => {
+        import('./modules/flowchart.js').catch(() => {});
+        import('./modules/visualization3d.js').catch(() => {});
+    }, 3000);
+}
+
+// 启动应用
+document.addEventListener('DOMContentLoaded', () => {
+    window.ACES_APP = new ACESApp();
+    loadNonCriticalResources();
+});
+
 // 全局错误处理
 window.addEventListener('error', (event) => {
     console.error('全局错误:', event.error);
