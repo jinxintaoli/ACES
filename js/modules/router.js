@@ -125,25 +125,28 @@ export class Router {
         }
     }
 
-    async loadTemplate(templateName) {
-        try {
-            const response = await fetch(`/pages/${templateName}.html`);
-            if (!response.ok) throw new Error('模板加载失败');
-
-            return await response.text();
-        } catch (error) {
-            console.error(`加载模板 ${templateName} 失败:`, error);
-            // 返回默认错误模板
+async loadTemplate(page) {
+    try {
+        // 如果是404页面，直接返回简单内容
+        if (page === '404') {
             return `
-                <div class="error-state">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <h3>页面加载失败</h3>
-                    <p>无法加载请求的页面，请稍后重试。</p>
-                    <button onclick="ACES_APP.router.navigate('/')" class="debug-btn">返回首页</button>
+                <div style="text-align: center; padding: 50px;">
+                    <h2>页面未找到</h2>
+                    <p>抱歉，您访问的页面不存在。</p>
+                    <button onclick="ACES_APP.router.navigate('/')">返回首页</button>
                 </div>
             `;
         }
+
+        // 其他页面正常加载
+        const response = await fetch(`./pages/${page}.html`);
+        if (!response.ok) throw new Error('模板加载失败');
+        return await response.text();
+    } catch (error) {
+        console.error(`加载模板 ${page} 失败:`, error);
+        throw error;
     }
+}
 
     updateContent(html) {
         const mainContent = document.getElementById('main-content');
