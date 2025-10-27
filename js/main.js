@@ -3,6 +3,96 @@ import { Router } from './modules/router.js';
 import { AuthManager } from './modules/auth.js';
 import { Utils } from './modules/utils.js';
 
+// 防止重复声明
+if (window.ACES_APP_LOADED) {
+    console.warn('ACES 应用已加载，跳过重复初始化');
+    return;
+}
+window.ACES_APP_LOADED = true;
+
+console.log('ACES 应用开始加载...', new Date().toISOString());
+
+// 简化的应用类
+class ACESApp {
+    constructor() {
+        this.init();
+    }
+
+    async init() {
+        try {
+            console.log('初始化路由系统...');
+
+            // 动态导入路由模块
+            const { Router } = await import('./modules/router.js');
+            this.router = new Router();
+            await this.router.init();
+
+            // 隐藏加载状态
+            this.hideLoading();
+
+            console.log('ACES 应用初始化完成');
+        } catch (error) {
+            console.error('初始化失败:', error);
+            this.showErrorState(error.message);
+        }
+    }
+
+    hideLoading() {
+        const loadingElement = document.querySelector('.loading-spinner');
+        if (loadingElement) {
+            loadingElement.style.display = 'none';
+        }
+    }
+
+    showErrorState(message) {
+        const mainContent = document.getElementById('main-content');
+        if (mainContent) {
+            mainContent.innerHTML = `
+                <div style="padding: 50px; text-align: center;">
+                    <h3>应用加载遇到问题</h3>
+                    <p>${message}</p>
+                    <button onclick="location.reload()" style="padding: 10px 20px; margin: 5px;">重新加载</button>
+                    <button onclick="loadBasicDashboard()" style="padding: 10px 20px; margin: 5px;">基础模式</button>
+                </div>
+            `;
+        }
+    }
+}
+
+// 基础模式加载（应急方案）
+window.loadBasicDashboard = function() {
+    console.log('加载基础仪表板...');
+    fetch('./pages/dashboard.html')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('main-content').innerHTML = html;
+            document.querySelector('.loading-spinner').style.display = 'none';
+        })
+        .catch(() => {
+            document.getElementById('main-content').innerHTML = `
+                <div style="padding: 20px;">
+                    <h2>ACES 平台</h2>
+                    <p>简化版本已加载</p>
+                    <div>
+                        <button onclick="alert('代码编辑器')">代码编辑器</button>
+                        <button onclick="alert('算法库')">算法库</button>
+                    </div>
+                </div>
+            `;
+            document.querySelector('.loading-spinner').style.display = 'none';
+        });
+};
+
+// 启动应用（确保只启动一次）
+if (!window.ACES_APP) {
+    document.addEventListener('DOMContentLoaded', () => {
+        console.log('DOM 加载完成，启动 ACES 应用');
+        window.ACES_APP = new ACESApp();
+    });
+} else {
+    console.log('ACES 应用已存在，跳过初始化');
+}
+
 class ACESApp {
     constructor() {
         this.router = new Router();
