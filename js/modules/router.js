@@ -127,7 +127,7 @@ export class Router {
 
 async loadTemplate(page) {
     try {
-        // 如果是404页面，直接返回简单内容
+        // 如果是404页面，直接返回HTML内容，不进行网络请求
         if (page === '404') {
             return `
                 <div style="text-align: center; padding: 50px;">
@@ -144,17 +144,10 @@ async loadTemplate(page) {
         return await response.text();
     } catch (error) {
         console.error(`加载模板 ${page} 失败:`, error);
-        throw error;
+        // 任何错误都返回404页面
+        return this.loadTemplate('404');
     }
 }
-
-    updateContent(html) {
-        const mainContent = document.getElementById('main-content');
-        if (mainContent) {
-            // 使用安全的HTML插入
-            this.utils.setSafeHTML(mainContent, html);
-        }
-    }
 
     async loadModule(moduleName) {
         try {
