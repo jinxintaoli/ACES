@@ -13,23 +13,45 @@
     <!-- 字体和图标 -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- 移除有问题的预加载，或修复它们 -->
-    <!-- <link rel="preload" href="./js/main.js" as="script"> 移除这行 -->
-
-    <!-- 添加 favicon 避免 404 -->
+    <!-- 添加 favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
-    <!-- 简单的内联 favicon -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
 </head>
 <body>
-    <!-- 页面内容保持不变 -->
+    <div id="app">
+        <!-- 导航栏 -->
+        <header class="app-header">
+            <div class="container">
+                <h1>ACES 系统扩展可视化平台</h1>
+                <p class="subtitle">信息学竞赛万能引擎 - 算法扩展、C++知识点与调试工具</p>
+            </div>
+        </header>
+
+        <!-- 主内容区域 -->
+        <main class="app-main">
+            <div class="container">
+                <div class="main-content" id="main-content">
+                    <!-- 显示加载状态 -->
+                    <div class="loading-spinner">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>ACES 系统加载中...</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="app-footer">
+            <div class="container">
+                <p>ACES 系统扩展可视化平台 &copy; 2023</p>
+                <p>部署于 GitHub Pages | <a href="https://github.com/jinxintao11/ACES" target="_blank">查看源代码</a></p>
+            </div>
+        </footer>
+    </div>
 
     <!-- 核心JS库 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.1/showdown.min.js"></script>
-    <script src="./js/main-simple.js"></script>
 
-    <!-- 应用JS - 确保只加载一次 -->
-    <script type="module" src="./js/main.js"></script>
+    <!-- 只加载一个 JS 文件 - 选择修复后的 main-simple.js -->
+    <script src="./js/main-simple.js"></script>
 </body>
 </html>
