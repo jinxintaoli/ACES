@@ -130,6 +130,9 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 function setupNavigationEvents() {
+    console.log('setupNavigationEvents 函数被调用了');
+    const navItems = document.querySelectorAll('.component-list li');
+    console.log('找到的导航项数量:', navItems.length);
     // 绑定系统导航点击事件
     const navItems = document.querySelectorAll('.component-list li');
     navItems.forEach(item => {

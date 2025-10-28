@@ -32,6 +32,11 @@ function initializeApp() {
                     window.dispatchEvent(new Event('DOMContentLoaded'));
                 }
             }, 100);
+            if (typeof setupNavigationEvents === 'function') {
+        setupNavigationEvents(); // 直接调用 dashboard.html 里的函数
+        } else {
+            console.error('setupNavigationEvents 函数未找到!');
+        }
         })
         .catch(error => {
             console.error('加载失败:', error);
