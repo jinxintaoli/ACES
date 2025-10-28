@@ -195,11 +195,311 @@ function showAnalysis() {
 function showChapterContent(chapter) {
     const contentDiv = document.getElementById('chapter-content');
     if (contentDiv) {
-        contentDiv.innerHTML = `
-            <h4>第 ${chapter} 章</h4>
-            <p>这是第 ${chapter} 章的详细内容...</p>
+        const chapterContent = getChapterContent(chapter);
+        contentDiv.innerHTML = chapterContent;
+    }
+}
+
+function getChapterContent(chapter) {
+    const chapters = {
+        '1': {
+            title: '第1章 预备知识',
+            content: `
+                <h4>第1章 预备知识</h4>
+                <div class="chapter-section">
+                    <h5>主要内容：</h5>
+                    <ul>
+                        <li>C++简介</li>
+                        <li>C++的起源</li>
+                        <li>可移植性和标准</li>
+                        <li>程序创建的技巧</li>
+                        <li>面向对象编程</li>
+                        <li>泛型编程</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h5>第一个C++程序：</h5>
+                    <div class="code-block">
+// myfirst.cpp
+#include &lt;iostream&gt;
+
+int main() {
+    using namespace std;
+    cout << "Come up and C++ me some time.";
+    cout << endl;
+    cout << "You won't regret it!" << endl;
+    return 0;
+}
+                    </div>
+                </div>
+                <div class="key-points">
+                    <h5>关键概念：</h5>
+                    <ul>
+                        <li><strong>main()函数</strong>：每个C++程序都必须包含main()函数</li>
+                        <li><strong>#include编译指令</strong>：使iostream文件的内容可用</li>
+                        <li><strong>using namespace</strong>：使用std名称空间</li>
+                        <li><strong>cout</strong>：用于输出的对象</li>
+                        <li><strong>&lt;&lt;运算符</strong>：将字符串插入到输出流中</li>
+                    </ul>
+                </div>
+            `
+        },
+        '2': {
+            title: '第2章 开始学习C++',
+            content: `
+                <h4>第2章 开始学习C++</h4>
+                <div class="chapter-section">
+                    <h5>C++程序的基本结构：</h5>
+                    <ul>
+                        <li>注释：// 和 /* */</li>
+                        <li>预处理器编译指令 #include</li>
+                        <li>函数头：int main()</li>
+                        <li>函数体：用{}括起来</li>
+                        <li>using编译指令</li>
+                        <li>return语句</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h5>示例程序：</h5>
+                    <div class="code-block">
+// carrots.cpp
+#include &lt;iostream&gt;
+
+int main() {
+    using namespace std;
+
+    int carrots;            // 声明一个整型变量
+
+    carrots = 25;           // 给变量赋值
+    cout << "I have ";
+    cout << carrots;        // 显示变量的值
+    cout << " carrots.";
+    cout << endl;
+
+    carrots = carrots - 1;  // 修改变量的值
+    cout << "Crunch, crunch. Now I have " << carrots << " carrots." << endl;
+    return 0;
+}
+                    </div>
+                </div>
+                <div class="key-points">
+                    <h5>重要概念：</h5>
+                    <ul>
+                        <li><strong>变量声明</strong>：int carrots;</li>
+                        <li><strong>赋值语句</strong>：carrots = 25;</li>
+                        <li><strong>cout的多重输出</strong>：cout &lt;&lt; a &lt;&lt; b &lt;&lt; c;</li>
+                        <li><strong>endl控制符</strong>：重起一行</li>
+                        <li><strong>cin输入</strong>：cin >> carrots;</li>
+                    </ul>
+                </div>
+            `
+        },
+        '3': {
+            title: '第3章 处理数据',
+            content: `
+                <h4>第3章 处理数据</h4>
+                <div class="chapter-section">
+                    <h5>C++数据类型：</h5>
+                    <ul>
+                        <li><strong>基本类型</strong>：
+                            <ul>
+                                <li>整型：short, int, long, long long</li>
+                                <li>字符型：char, wchar_t</li>
+                                <li>布尔型：bool</li>
+                                <li>浮点型：float, double, long double</li>
+                            </ul>
+                        </li>
+                        <li><strong>复合类型</strong>：数组、字符串、指针、结构等</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h5>数据类型示例：</h5>
+                    <div class="code-block">
+// limits.cpp
+#include &lt;iostream&gt;
+#include &lt;climits&gt;
+
+int main() {
+    using namespace std;
+
+    int n_int = INT_MAX;        // 整型的最大值
+    short n_short = SHRT_MAX;   // short的最大值
+    long n_long = LONG_MAX;     // long的最大值
+    long long n_llong = LLONG_MAX; // long long的最大值
+
+    cout << "int is " << sizeof(int) << " bytes." << endl;
+    cout << "short is " << sizeof n_short << " bytes." << endl;
+    cout << "long is " << sizeof n_long << " bytes." << endl;
+    cout << "long long is " << sizeof n_llong << " bytes." << endl;
+
+    cout << "Maximum values:" << endl;
+    cout << "int: " << n_int << endl;
+    cout << "short: " << n_short << endl;
+    cout << "long: " << n_long << endl;
+    cout << "long long: " << n_llong << endl;
+
+    return 0;
+}
+                    </div>
+                </div>
+                <div class="key-points">
+                    <h5>关键知识点：</h5>
+                    <ul>
+                        <li><strong>sizeof运算符</strong>：返回类型或变量的长度</li>
+                        <li><strong> climits头文件</strong>：包含符号常量</li>
+                        <li><strong>初始化</strong>：int owls = 101; 或 int owls(101);</li>
+                        <li><strong>无符号类型</strong>：unsigned short, unsigned int等</li>
+                        <li><strong>const限定符</strong>：定义符号常量</li>
+                    </ul>
+                </div>
+            `
+        },
+        '4': {
+            title: '第4章 复合类型',
+            content: `
+                <h4>第4章 复合类型</h4>
+                <div class="chapter-section">
+                    <h5>主要内容：</h5>
+                    <ul>
+                        <li>数组</li>
+                        <li>字符串</li>
+                        <li>结构</li>
+                        <li>共用体</li>
+                        <li>枚举</li>
+                        <li>指针</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h5>数组和字符串示例：</h5>
+                    <div class="code-block">
+// array.cpp
+#include &lt;iostream&gt;
+
+int main() {
+    using namespace std;
+
+    // 数组示例
+    int yams[3];        // 创建包含3个元素的数组
+    yams[0] = 7;        // 为第一个元素赋值
+    yams[1] = 8;
+    yams[2] = 6;
+
+    int yamcosts[3] = {20, 30, 5}; // 创建并初始化数组
+
+    cout << "Total yams = ";
+    cout << yams[0] + yams[1] + yams[2] << endl;
+
+    // 字符串示例
+    char dog[8] = {'b', 'e', 'a', 'u', 'x', ' ', 'I', 'I'}; // 不是字符串
+    char cat[8] = {'f', 'a', 't', 'e', 's', 's', 'a', '\\0'}; // 是字符串
+
+    cout << dog << endl;  // 可能不会正常显示
+    cout << cat << endl;  // 正常显示
+
+    return 0;
+}
+                    </div>
+                </div>
+                <div class="key-points">
+                    <h5>重要概念：</h5>
+                    <ul>
+                        <li><strong>数组声明</strong>：typeName arrayName[arraySize];</li>
+                        <li><strong>字符串</strong>：以空字符\\0结尾的字符序列</li>
+                        <li><strong>结构</strong>：struct inflatable { char name[20]; float volume; double price; };</li>
+                        <li><strong>共用体</strong>：一次只能存储一个值</li>
+                        <li><strong>枚举</strong>：enum spectrum { red, orange, yellow, green };</li>
+                    </ul>
+                </div>
+            `
+        },
+        '5': {
+            title: '第5章 循环和关系表达式',
+            content: `
+                <h4>第5章 循环和关系表达式</h4>
+                <div class="chapter-section">
+                    <h5>循环类型：</h5>
+                    <ul>
+                        <li>for循环</li>
+                        <li>while循环</li>
+                        <li>do while循环</li>
+                        <li>基于范围的for循环（C++11）</li>
+                    </ul>
+                </div>
+                <div class="code-example">
+                    <h5>循环示例：</h5>
+                    <div class="code-block">
+// forloop.cpp
+#include &lt;iostream&gt;
+
+int main() {
+    using namespace std;
+
+    // for循环示例
+    cout << "Counting forward:\\n";
+    for (int i = 0; i < 10; i++)
+        cout << i << " ";
+
+    cout << "\\nCounting backward:\\n";
+    for (int i = 9; i >= 0; i--)
+        cout << i << " ";
+
+    cout << "\\nCounting by fives:\\n";
+    for (int i = 0; i <= 50; i += 5)
+        cout << i << " ";
+
+    // while循环示例
+    char ch;
+    int count = 0;
+    cout << "\\nEnter characters; enter # to quit:\\n";
+    cin >> ch;
+    while (ch != '#') {
+        cout << ch;
+        count++;
+        cin >> ch;
+    }
+    cout << endl << count << " characters read\\n";
+
+    return 0;
+}
+                    </div>
+                </div>
+                <div class="key-points">
+                    <h5>关键概念：</h5>
+                    <ul>
+                        <li><strong>for循环语法</strong>：for(init; test; update) statement</li>
+                        <li><strong>递增递减运算符</strong>：++i（前缀）和 i++（后缀）</li>
+                        <li><strong>组合赋值运算符</strong>：+=, -=, *=, /=, %=</li>
+                        <li><strong>关系运算符</strong>：<, <=, ==, >=, >, !=</li>
+                        <li><strong>逻辑运算符</strong>：&&, ||, !</li>
+                    </ul>
+                </div>
+            `
+        }
+        // 其他章节的内容可以类似添加...
+    };
+
+    // 如果章节不存在，返回默认内容
+    if (chapters[chapter]) {
+        return chapters[chapter].content;
+    } else {
+        return `
+            <h4>第${chapter}章</h4>
+            <p>这是第${chapter}章的详细内容...</p>
             <div class="code-block">
+// 第${chapter}章示例代码
+#include &lt;iostream&gt;
+using namespace std;
+
+int main() {
+    cout << "学习第${chapter}章" << endl;
+    return 0;
+}
+            </div>
+        `;
+    }
+}
 // 第 ${chapter} 章示例代码
+
 #include &lt;iostream&gt;
 using namespace std;
 
